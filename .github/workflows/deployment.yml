@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: read version from tag
+      - name: read version from tag
         id: read_version
         shell: bash
         run: |
@@ -32,15 +32,15 @@ jobs:
           v="${r//'refs/heads/v'/'v'}"                      # replace prefix refs/heads/
           echo "::set-output name=RELEASE_VERSION::$v"      # <--- Set environment variable
 
-    - name: Upload binaries to release
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: target/Saxon-HE-accuracy-${{ steps.read_version.outputs.RELEASE_VERSION }}.jar
-        asset_name: Saxon-HE-accuracy-${{ steps.read_version.outputs.RELEASE_VERSION }}.jar
-        tag: ${{ steps.read_version.outputs.RELEASE_VERSION }}
-        overwrite: true
-        body: "This is a Saxon ${{ steps.read_version.outputs.RELEASE_VERSION }} using decimal-based floating-point and offers half-up rounding as extension function.
+       - name: Upload binaries to release
+         uses: svenstaro/upload-release-action@v2
+            with:
+              repo_token: ${{ secrets.GITHUB_TOKEN }}
+              file: target/Saxon-HE-accuracy-${{ steps.read_version.outputs.RELEASE_VERSION }}.jar
+              asset_name: Saxon-HE-accuracy-${{ steps.read_version.outputs.RELEASE_VERSION }}.jar
+              tag: ${{ steps.read_version.outputs.RELEASE_VERSION }}
+              overwrite: true
+              body: "This is a Saxon ${{ steps.read_version.outputs.RELEASE_VERSION }} using decimal-based floating-point and offers half-up rounding as extension function.
 
 The JAR might be called as [Saxon via command-line](https://www.saxonica.com/html/documentation/using-xsl/commandline/).
 
