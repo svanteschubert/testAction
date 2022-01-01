@@ -18,25 +18,17 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml   
-    - name: read version from tag
-      id: read_version
-      shell: bash
-      run: |
-        v=${{ github.ref }}                               # <--- overtake version, e.g refs/tags/v10.6
-        v=$(echo $v | sed -e "s/\refs\/tags\/v/v/g")      # replace prefix refs/tags/
-        v=$(echo $v | sed -e "s/\refs\/heads\/v/v/g")     # replace prefix refs/heads/        
-        echo "::set-output name=RELEASE_VERSION::$v"      # <--- Set environment variable
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: target/Saxon-HE-accuracy-${{ steps.read_version.outputs.RELEASE_VERSION }}.jar
-        asset_name: Saxon-HE-accuracy-${{ steps.read_version.outputs.RELEASE_VERSION }}.jar
-        tag: ${{ steps.read_version.outputs.RELEASE_VERSION }}
+        file: target/Saxon-HE-accuracy-${{ GITHUB_REF_NAME }}.jar
+        asset_name: Saxon-HE-accuracy-${{ GITHUB_REF_NAME }}.jar
+        tag: ${{ GITHUB_REF_NAME }}
         overwrite: true
-        body: "This is a Saxon ${{ steps.read_version.outputs.RELEASE_VERSION }} using decimal-based floating-point and offers half-up rounding as extension function.
+        body: "This is a Saxon ${{ GITHUB_REF_NAME }} using decimal-based floating-point and offers half-up rounding as extension function.
 
 The JAR might be called as [Saxon via command-line](https://www.saxonica.com/html/documentation/using-xsl/commandline/).
 
 For instance, in the root of the GitHub repository after executing a build via 'mvn clean install' the following might be executed by command line: (here file paths from Linux)
-*java -jar ./target/Saxon-HE-accuracy-$tag.jar -s:src/test/resources/xml/in.xml -xsl:src/test/resources/xsl/test.xsl -o:target/generated-sources/out.xml*"
+*java -jar ./target/Saxon-HE-accuracy-${{ GITHUB_REF_NAME }}.jar -s:src/test/resources/xml/in.xml -xsl:src/test/resources/xsl/test.xsl -o:target/generated-sources/out.xml*"
