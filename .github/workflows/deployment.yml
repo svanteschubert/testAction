@@ -18,17 +18,26 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml   
+      # This step reads the pom.xml from repo and use its version for the release
+      # This works on any self-hosted runner OS
+    - name: Read pom.xml and use its version for new release
+      id: read_version
+      shell: bash
+      run: |
+        v=$(cat pom.xml)                                  # <--- Read pom.xml
+        v="${grep -a -m 1 "<version>" | sed 's/.*<version>//p' | head -1 | sed 's/<\/version>//p' | head -1 }"      # get version number from pom.xml        
+        echo "::set-output name=RELEASE_VERSION::$v"         # <--- Set environment variable
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: target/Saxon-HE-accuracy-${{ github.ref_name }}.jar
-        asset_name: Saxon-HE-accuracy-${{ github.ref_name }}.jar
-        tag: ${{ github.ref_name }}
+        file: target/Saxon-HE-accuracy-${{ steps.read_version.outputs.RELEASE_VERSION }}.jar
+        asset_name: Saxon-HE-accuracy-${{ steps.read_version.outputs.RELEASE_VERSION }}.jar
+        tag: ${{ steps.read_version.outputs.RELEASE_VERSION }}  # <--- Use environment variables that was created earlier
         overwrite: true
-        body: "This is a Saxon ${{ github.ref_name }} using decimal-based floating-point and offers half-up rounding as extension function.
+        body: "This is a Saxon ${{ steps.read_version.outputs.RELEASE_VERSION }} using decimal-based floating-point and offers half-up rounding as extension function.
 
 The JAR might be called as [Saxon via command-line](https://www.saxonica.com/html/documentation/using-xsl/commandline/).
 
 For instance, in the root of the GitHub repository after executing a build via 'mvn clean install' the following might be executed by command line: (here file paths from Linux)
-*java -jar ./target/Saxon-HE-accuracy-${{ github.ref_name }}.jar -s:src/test/resources/xml/in.xml -xsl:src/test/resources/xsl/test.xsl -o:target/generated-sources/out.xml*"
+*java -jar ./target/Saxon-HE-accuracy-${{ steps.read_version.outputs.RELEASE_VERSION }}.jar -s:src/test/resources/xml/in.xml -xsl:src/test/resources/xsl/test.xsl -o:target/generated-sources/out.xml*"
