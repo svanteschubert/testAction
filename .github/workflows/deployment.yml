@@ -24,7 +24,7 @@ jobs:
       # run: |
       # echo ::set-env name=VERSION::$(grep -a -m 1 "<version>" | sed 's/.*<version>//p' | head -1 | sed 's/<\/version>//p' | head -1)    
       run: |
-        echo "release_version=$(grep -a -m 1 "<version>" | sed 's/.*<version>//p' | head -1 | sed 's/<\/version>//p' | head -1)" >> $GITHUB_ENV
+        echo "release_version=$(cat pom.xml | grep -a -m 1 "<version>" | sed 's/.*<version>//p' | head -1 | sed 's/<\/version>//p' | head -1)" >> $GITHUB_ENV
       #id: read_version
       #shell: bash
       #run: |
