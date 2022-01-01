@@ -23,8 +23,8 @@ jobs:
       shell: bash
       run: |
         v=${{ github.ref }}                               # <--- overtake version, e.g refs/tags/v10.6
-        v="${r//"refs/tags/v"/'v'}"                       # replace prefix refs/tags/
-        v="${r//"refs/heads/v"/'v'}"                      # replace prefix refs/heads/
+        v=$(echo $v | sed -e "s/\refs\/tags\/v/v/g")      # replace prefix refs/tags/
+        v=$(echo $v | sed -e "s/\refs\/heads\/v/v/g")     # replace prefix refs/heads/        
         echo "::set-output name=RELEASE_VERSION::$v"      # <--- Set environment variable
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
