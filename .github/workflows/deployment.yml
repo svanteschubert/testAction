@@ -1,0 +1,39 @@
+name: Publish JAR on tagging
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: target/Saxon-HE-accuracy-$tag.jar
+        asset_name: Saxon-HE-accuracy-$tag.jar
+        tag: ${{ github.ref }}
+        overwrite: true
+        body: "This is a Saxon $tag using decimal-based floating-point and offers half-up rounding as extension function.
+
+The JAR might be called as [Saxon via command-line](https://www.saxonica.com/html/documentation/using-xsl/commandline/).
+
+For instance, in the root of the GitHub repository after executing a build via 'mvn clean install' the following might be executed by command line: (here file paths from Linux)
+*java -jar ./target/Saxon-HE-accuracy-$tag.jar -s:src/test/resources/xml/in.xml -xsl:src/test/resources/xsl/test.xsl -o:target/generated-sources/out.xml*"
