@@ -37,7 +37,7 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: target/Saxon-HE-accuracy-${{ env.release_version }}.jar
         asset_name: Saxon-HE-accuracy-${{ env.release_version }}.jar
-        tag: v${{ env.release_version }} release  # <--- Use environment variables that was created earlier
+        tag: v${{ env.release_version }}  # <--- Use environment variables that was created earlier
         overwrite: true
         body: "This is a Saxon v${{ env.release_version }} release using decimal-based floating-point and offers half-up rounding as extension function.
 
