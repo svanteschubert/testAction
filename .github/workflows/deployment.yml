@@ -27,13 +27,13 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: target/Saxon-HE-accuracy-${{ github.ref }}.jar
-        asset_name: Saxon-HE-accuracy-${{ github.ref }}.jar
         tag: ${{ github.ref }}
+        file: target/Saxon-HE-accuracy-${{ tag }}.jar
+        asset_name: Saxon-HE-accuracy-${{ tag }}.jar        
         overwrite: true
-        body: "This is a Saxon ${{ github.ref }} using decimal-based floating-point and offers half-up rounding as extension function.
+        body: "This is a Saxon ${{ tag }} using decimal-based floating-point and offers half-up rounding as extension function.
 
 The JAR might be called as [Saxon via command-line](https://www.saxonica.com/html/documentation/using-xsl/commandline/).
 
 For instance, in the root of the GitHub repository after executing a build via 'mvn clean install' the following might be executed by command line: (here file paths from Linux)
-*java -jar ./target/Saxon-HE-accuracy-${{ github.ref }}.jar -s:src/test/resources/xml/in.xml -xsl:src/test/resources/xsl/test.xsl -o:target/generated-sources/out.xml*"
+*java -jar ./target/Saxon-HE-accuracy-${{ tag }}.jar -s:src/test/resources/xml/in.xml -xsl:src/test/resources/xsl/test.xsl -o:target/generated-sources/out.xml*"
