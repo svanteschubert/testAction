@@ -3,7 +3,7 @@ name: Publish JAR on tagging
 on:
   push:
     tags:
-      - 'v*'
+      - '*'
 
 jobs:
   build:
