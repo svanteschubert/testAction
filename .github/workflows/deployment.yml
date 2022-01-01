@@ -47,3 +47,4 @@ For instance, in the root of the GitHub repository after executing a build via '
 ~~~ Java
    java -jar ./target/Saxon-HE-accuracy-10.5.jar -s:src/test/resources/xml/in.xml -xsl:src/test/resources/xsl/test.xsl -o:target/generated-sources/out.xml
 ~~~
+"
